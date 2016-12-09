@@ -1,0 +1,10 @@
+---
+applications:
+- path: target/AdvisorBot.war
+  memory: 512M
+  instances: 1
+  domain: mybluemix.net
+  name: jazzbot-advisor-bot
+  host: jazzbot-advisor-bot
+  disk_quota: 1024M
+  buildpack: liberty-for-java
