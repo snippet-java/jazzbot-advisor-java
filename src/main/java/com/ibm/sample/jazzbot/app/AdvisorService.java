@@ -1,18 +1,12 @@
 package com.ibm.sample.jazzbot.app;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Properties;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -158,54 +152,20 @@ public class AdvisorService {
     
   //Match param to books.properties. If found, return the matching url. 
     //Otherwise, assume param itself is a valid url
-    private static String mapBookUrl(String bookSelection) {
+    private static String mapBookUrl(String bookSelection) throws ClientProtocolException, IOException {
+    	
+    	HttpClient client = HttpClientBuilder.create().build();
+    	HttpGet get = new HttpGet("https://raw.githubusercontent.com/snippet-java/AlexaBooks/master/books.properties");
+    	
+		HttpResponse resp = client.execute(get);
     	
 		Properties prop = new Properties();
-		InputStream input = null;
-		
-		try {
-			//read from current directory
-			input = new FileInputStream(findFile("books.properties"));
-			// load a properties file
-			prop.load(input);
+		prop.load(resp.getEntity().getContent());
 
-			if(prop.containsKey(bookSelection))
-				bookSelection = prop.getProperty(bookSelection);
+		if(prop.containsKey(bookSelection))
+			bookSelection = prop.getProperty(bookSelection);
 
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		} finally {
-			if (input != null) {
-				try {
-					input.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
 		return bookSelection;
     }
     
-
-    
-
-	private static String findFile(String filename) {
-		File root = new File(System.getProperty("user.dir"));
-        try {
-            boolean recursive = true;
-
-            Collection<File> files = FileUtils.listFiles(root, new String[] {"properties"}, recursive);
-
-            for (Iterator<File> iterator = files.iterator(); iterator.hasNext();) {
-                File file = iterator.next();
-                if (file.getName().equals(filename)) {
-                	return file.getAbsolutePath();
-                }
-            }
-            	
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-	}
 }
