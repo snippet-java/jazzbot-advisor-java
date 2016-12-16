@@ -21,10 +21,11 @@ public class Set extends HttpServlet {
 		String output = "";
 		try {
 		    String sessionId = request.getParameter("sessionId");
-			String book = request.getParameter("book");
-			AdvisorService.init(book, sessionId);
-	    	
-			output += "Success";
+			String book = request.getParameter("book").trim();
+			if(AdvisorService.init(book, sessionId))
+				output += "Book loaded successfully";
+			else
+				output += "Book not found. Please try again. Example: set book one";
 		}
 		catch (Exception e) {
 			output += "Exception caught: " + e.getMessage(); 
