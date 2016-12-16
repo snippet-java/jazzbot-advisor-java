@@ -26,10 +26,8 @@ public class Start extends HttpServlet {
 		JsonObject output = new JsonObject();
 
 		if(!book.has("material"))
-//			output += "Please set the book first";
-			output.addProperty("Please set the book first", "");
+			output = AdvisorService.setJazzbotMessage("Please set the book first");
 		else {
-//			output += AdvisorService.getNextResponse(book, 0);
 			int startPos = 1;
 			output = AdvisorService.getQASet(book, startPos);
 			

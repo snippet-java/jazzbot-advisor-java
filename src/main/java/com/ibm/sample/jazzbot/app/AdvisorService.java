@@ -126,4 +126,13 @@ public class AdvisorService {
 		return nextResponse;
     }
     
+    //ONLY usage for jazzbot - to send a message to jazzbot
+    protected static JsonObject setJazzbotMessage(String message) {
+    	JsonObject messageOutput = new JsonObject();
+    	
+    	messageOutput.addProperty("message", message);
+    	messageOutput.add("options", new JsonArray());
+    	
+    	return messageOutput;
+    }
 }

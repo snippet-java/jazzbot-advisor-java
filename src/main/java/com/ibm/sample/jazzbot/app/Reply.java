@@ -27,11 +27,10 @@ public class Reply extends HttpServlet {
     	JsonObject book = AdvisorService.sessionData.get(sessionId)==null?
 				new JsonObject():AdvisorService.sessionData.get(sessionId).getAsJsonObject();
 		if(!book.has("material"))
-//			output += "Please set the book first";
-			output.addProperty("Please set the book first", "");
+			output = AdvisorService.setJazzbotMessage("Please set the book first");
 		else {
 			if(!book.has("pos")) 
-				output.addProperty("Please start the book first", "");
+				output = AdvisorService.setJazzbotMessage("Please start the book first");
 			else {
 				int currentPos = book.get("pos").getAsInt();
 				int nextPos = currentPos;
@@ -40,13 +39,13 @@ public class Reply extends HttpServlet {
 				JsonArray materials = book.get("material").getAsJsonArray();
 				JsonObject material = materials.get(currentPos-1).getAsJsonObject();
 				
-				if(!material.has("options")) {
-					output.addProperty("End of book reached. Please start again the book", "");
-				}
+				if(!material.has("options")) 
+					output = AdvisorService.setJazzbotMessage("End of book reached. Please start again the book");
 				else {
 					JsonObject options = material.get("options").getAsJsonObject();
+					System.out.println("options: " + options + "\n" + "selected option: " + userOption + "--");
 					if(!options.has(userOption))
-						output.addProperty("Invalid option selected. Please try again", "");
+						output = AdvisorService.setJazzbotMessage("Invalid option selected. Please try again");
 					else {
 						nextPos = options.get(userOption).getAsInt();
 						output = AdvisorService.getQASet(book, nextPos);
