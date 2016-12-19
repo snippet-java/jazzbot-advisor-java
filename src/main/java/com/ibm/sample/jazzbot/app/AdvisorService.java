@@ -48,7 +48,6 @@ public class AdvisorService {
 		JsonParser parser = new JsonParser();
 		JsonObject inputSurvey = parser.parse(result).getAsJsonObject();
 		
-		
 		//-------------- Build up the survey array --------------------------
 		
 		//map each node element to an index number
@@ -86,8 +85,11 @@ public class AdvisorService {
 			for(int j=0; j<rules.size(); j++) {
 				JsonObject rule = rules.get(j).getAsJsonObject();
 				if(rule.get("v")!=null) {
-					options.addProperty(rule.get("v").getAsString(), nodeIndexes.indexOf(wires.get(j).getAsJsonArray().get(0).getAsString())+1);
-					hasOptions = true;
+					//Catch those scenario where option does not connect to other node
+					if(wires.get(j).getAsJsonArray().size() > 0) {
+						options.addProperty(rule.get("v").getAsString(), nodeIndexes.indexOf(wires.get(j).getAsJsonArray().get(0).getAsString())+1);
+						hasOptions = true;
+					}
 				}	
 			}
 			if(hasOptions)
@@ -111,6 +113,7 @@ public class AdvisorService {
 				new JsonObject():AdvisorService.sessionData.get(sessionId).getAsJsonObject();
 		book.add("material", qaSets);
 		book.addProperty("bookUrl", bookUrl);
+		
 		sessionData.add(sessionId, book);
 		
 		return true;
