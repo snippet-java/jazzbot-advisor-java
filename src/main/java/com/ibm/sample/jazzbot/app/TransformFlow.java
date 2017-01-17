@@ -21,7 +21,7 @@ public class TransformFlow extends HttpServlet {
 		JsonArray output = new JsonArray();
 		 
 		String bookUrl = request.getParameter("flowId");
-		output = AdvisorService.transformJson(bookUrl);
+		output = AdvisorService.transformJsonFromAllFlows(bookUrl);
     	
     	response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
